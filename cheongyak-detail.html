@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>청약 상세보기</title>
+  <style>
+    body {
+      margin: 0; 
+      padding: 0; 
+      font-family: sans-serif; 
+      background: #f7f7f7;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav {
+      background: #e0e0e0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .detail-info {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .detail-info .info-block {
+      flex: 1;
+      min-width: 300px;
+      margin: 10px;
+      padding: 15px;
+      background: #fafafa;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .info-block h3 {
+      margin-top: 0;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .info-list p {
+      margin: 5px 0;
+    }
+    .score-section {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .score-value {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #4caf50;
+      color: #fff;
+      font-size: 24px;
+      border-radius: 4px;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #2196F3;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .btn-back:hover {
+      background: #1976d2;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: inline-block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .btn-calc {
+      width: 100%;
+      padding: 10px;
+      background: #2196F3;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+    .btn-calc:hover {
+      background: #1976d2;
+    }
+    .result-section {
+      background: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+      text-align: center;
+      display: none; /* 계산 전에는 감춤 */
+    }
+    .result-section h3 {
+      margin: 0 0 10px 0;
+    }
+    .result-item {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    .note {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 10px;
+    }
+    .search-section {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .search-section input[type="text"] {
+      width: 60%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .btn-search {
+      padding: 8px 15px;
+      background: #2196F3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-search:hover {
+      background: #1976d2;
+    }
+    .infra-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .infra-item {
+      background: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      transition: 0.3s;
+    }
+    .infra-item:hover {
+      background: #f0f0f0;
+    }
+    .infra-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .infra-info {
+      font-size: 14px;
+      color: #555;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="container" style="border: none; background: none;">
+      <h1>청약 인사이트</h1>
+    </div>
+  </header>
+
+  <!-- 상단 네비게이션 -->
+  <nav>
+    <a href="index.html">메인</a>
+    <a href="cheongyak-list.html">맞춤 청약 확인</a>
+    <a href="logout.html">로그아웃</a>
+  </nav>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+    <h2>청약 상세보기</h2>
+    
+    <div class="detail-info">
+      <!-- 기본정보 블록 -->
+      <div class="info-block" id="basicInfo">
+        <h3>기본 정보</h3>
+        <div class="info-list">
+          <!-- 데이터 동적 표시 예정 -->
+        </div>
+      </div>
+
+      <!-- 분양가/분양유형 등 블록 -->
+      <div class="info-block" id="detailInfo">
+        <h3>분양 상세</h3>
+        <div class="info-list">
+          <!-- 데이터 동적 표시 예정 -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>주변 인프라 조회</h2>
+  
+      <div class="search-section">
+        <input 
+          type="text" 
+          id="infraSearch" 
+          placeholder="관심지역 또는 분양단지 이름 입력 (서울 강남구 역삼동)" />
+        <button class="btn-search" id="searchBtn">검색</button>
+        <p class="note">※ 주변 5km 이내의 교통, 교육, 상업시설 목록을 확인합니다.</p>
+      </div>
+  
+      <div class="infra-list" id="infraList">
+        <!-- JS로 동적 생성할 예정 -->
+      </div>
+    </div>
+  
+    <script>
+      // 임시 데이터 예시
+      const sampleInfras = {
+        // key: 검색 키워드 or 지역명
+        "서울 강남구 역삼동": [
+          { name: "역삼역(2호선)", type: "교통", distance: "500m" },
+          { name: "역삼초등학교", type: "교육", distance: "400m" },
+          { name: "삼성타운", type: "상업시설", distance: "1.2km" },
+        ],
+        "부산 해운대구 좌동": [
+          { name: "중동역(2호선)", type: "교통", distance: "1.5km" },
+          { name: "해운대초등학교", type: "교육", distance: "700m" },
+          { name: "신세계백화점 센텀시티점", type: "상업시설", distance: "3km" },
+        ]
+      };
+  
+      const searchBtn = document.getElementById("searchBtn");
+      const infraSearch = document.getElementById("infraSearch");
+      const infraList = document.getElementById("infraList");
+  
+      searchBtn.addEventListener('click', () => {
+        const query = infraSearch.value.trim();
+        if (!query) {
+          alert("검색어를 입력하세요.");
+          return;
+        }
+        renderInfra(query);
+      });
+  
+      function renderInfra(query) {
+        infraList.innerHTML = '';
+  
+        // sampleInfras에서 키워드 검색
+        if (sampleInfras[query]) {
+          const items = sampleInfras[query];
+          items.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'infra-item';
+  
+            div.innerHTML = `
+              <div class="infra-title">${item.name} (${item.type})</div>
+              <div class="infra-info">거리: ${item.distance}</div>
+            `;
+            infraList.appendChild(div);
+          });
+        } else {
+          // 없다면 "결과 없음"
+          const noData = document.createElement('div');
+          noData.className = 'infra-item';
+          noData.innerHTML = `
+            <div class="infra-title">검색 결과가 없습니다.</div>
+            <div class="infra-info">다른 지역명이나 단지명을 시도해 보세요.</div>
+          `;
+          infraList.appendChild(noData);
+        }
+      }
+    </script>
+    <!-- 종합 가치 계산 점수 표시 섹션 -->
+    <div class="score-section">
+      <h3>종합 가치 점수</h3>
+      <div class="score-value" id="scoreValue">00 점</div>
+    </div>
+
+    <!-- 뒤로가기 버튼 -->
+    <div style="text-align: center;">
+      <a href="cheongyak-list.html" class="btn-back">목록으로</a>
+    </div>
+  </div>
+
+  <script>
+    // 이전 화면에서 ?id= 값 받아오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const cheongyakId = urlParams.get('id') || 0;
+
+    // 샘플 데이터 (실제 프로젝트에서는 서버/DB에서 조회)
+    const sampleCheongyak = [
+      {
+        id: 1,
+        title: "서울 강남구 역삼동 APT",
+        type: "APT",
+        price: 800000000,
+        moveInDate: "2025-01-01",
+        area: "84m²",
+        region: "서울특별시 강남구 역삼동",
+        floors: "20층 / 35층",
+        supplyCount: 200
+      },
+      {
+        id: 2,
+        title: "부산 해운대구 좌동 오피스텔",
+        type: "오피스텔",
+        price: 300000000,
+        moveInDate: "2024-10-15",
+        area: "59m²",
+        region: "부산광역시 해운대구 좌동",
+        floors: "10층 / 25층",
+        supplyCount: 150
+      },
+      {
+        id: 3,
+        title: "서울 서초구 서초동 APT",
+        type: "APT",
+        price: 500000000,
+        moveInDate: "2025-06-01",
+        area: "75m²",
+        region: "서울특별시 서초구 서초동",
+        floors: "15층 / 30층",
+        supplyCount: 180
+      },
+      {
+        id: 4,
+        title: "서울 강남구 청담동 오피스텔",
+        type: "오피스텔",
+        price: 1200000000,
+        moveInDate: "2026-03-10",
+        area: "90m²",
+        region: "서울특별시 강남구 청담동",
+        floors: "12층 / 27층",
+        supplyCount: 100
+      }
+    ];
+
+    // 페이지 로드 시 데이터 표시
+    window.addEventListener('DOMContentLoaded', () => {
+      const data = sampleCheongyak.find(item => item.id == cheongyakId);
+      if (!data) {
+        alert("잘못된 접근이거나 데이터가 없습니다.");
+        return;
+      }
+      renderDetail(data);
+    });
+
+    function renderDetail(data) {
+      // 기본정보 표시
+      const basicInfoEl = document.querySelector('#basicInfo .info-list');
+      basicInfoEl.innerHTML = `
+        <p><strong>단지명:</strong> ${data.title}</p>
+        <p><strong>위치:</strong> ${data.region}</p>
+        <p><strong>입주 예정일:</strong> ${data.moveInDate}</p>
+        <p><strong>공급 세대수:</strong> ${data.supplyCount} 세대</p>
+      `;
+
+      // 상세정보 표시
+      const detailInfoEl = document.querySelector('#detailInfo .info-list');
+      detailInfoEl.innerHTML = `
+        <p><strong>분양 유형:</strong> ${data.type}</p>
+        <p><strong>평형/면적:</strong> ${data.area}</p>
+        <p><strong>분양가:</strong> ${formatPrice(data.price)}</p>
+        <p><strong>층수(해당/최고):</strong> ${data.floors}</p>
+      `;
+
+      // 종합 가치 점수(간단 가중치 예시)
+      const score = calcValueScore(data);
+      document.getElementById('scoreValue').textContent = score + " 점";
+    }
+
+    // 임의의 간단한 가치 계산 로직 (예시)
+    function calcValueScore(data) {
+      let score = 0;
+      // 가격이 낮을수록 가점
+      if (data.price <= 300000000) score += 90;
+      else if (data.price <= 600000000) score += 70;
+      else if (data.price <= 900000000) score += 50;
+      else score += 30;
+
+      // 면적이 클수록 가점 (매우 단순화 예시)
+      const areaNum = parseInt(data.area);
+      if (areaNum >= 80) score += 20;
+      else score += 10;
+
+      // 공급 세대수에 따른 가점
+      if (data.supplyCount > 150) score += 10;
+
+      // 지역에 따른 가점 (예시: 서울)
+      if (data.region.includes("서울")) score += 5;
+
+      return score;
+    }
+
+    function formatPrice(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+    }
+  </script>
+  <div class="container">
+    <h2>금융 시뮬레이션</h2>
+
+    <!-- 입력 섹션 -->
+    <div class="form-group">
+      <label for="annualIncome">연소득 (만원 단위)</label>
+      <input type="number" id="annualIncome" placeholder="예) 4000" />
+    </div>
+
+    <div class="form-group">
+      <label for="loanAmount">대출 희망액 (만원 단위)</label>
+      <input type="number" id="loanAmount" placeholder="예) 30000" />
+    </div>
+
+    <div class="form-group">
+      <label for="interestRate">금리 (연 %)</label>
+      <input type="number" step="0.01" id="interestRate" placeholder="예) 3.5" />
+    </div>
+
+    <div class="form-group">
+      <label for="loanPeriod">상환 기간 (년)</label>
+      <input type="number" id="loanPeriod" placeholder="예) 20" />
+    </div>
+
+    <button class="btn-calc" id="calcBtn">시뮬레이션 계산</button>
+
+    <!-- 결과 섹션 -->
+    <div class="result-section" id="resultSection">
+      <h3>계산 결과</h3>
+      <div class="result-item" id="monthlyPay"></div>
+      <div class="result-item" id="totalInterest"></div>
+      <div class="result-item" id="dsrCheck"></div>
+    </div>
+
+    <p class="note">※ 실제 대출 조건은 금융기관마다 다를 수 있으며, 본 계산은 간단 예시일 뿐입니다.</p>
+  </div>
+
+  <script>
+    const calcBtn = document.getElementById('calcBtn');
+    const resultSection = document.getElementById('resultSection');
+    const monthlyPayEl = document.getElementById('monthlyPay');
+    const totalInterestEl = document.getElementById('totalInterest');
+    const dsrCheckEl = document.getElementById('dsrCheck');
+
+    calcBtn.addEventListener('click', () => {
+      const annualIncome = parseFloat(document.getElementById('annualIncome').value) || 0;
+      const loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
+      const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+      const loanPeriod = parseFloat(document.getElementById('loanPeriod').value) || 0;
+
+      // 간단한 유효성 체크
+      if (annualIncome <= 0 || loanAmount <= 0 || interestRate <= 0 || loanPeriod <= 0) {
+        alert("모든 값을 올바르게 입력해주세요.");
+        return;
+      }
+
+      // 연이율(interestRate)을 소수로 변환
+      const monthlyRate = interestRate / 100 / 12; 
+      const totalMonths = loanPeriod * 12; 
+
+      // 원리금 균등분할상환 공식 (간단 예시, 실무에선 더 복합적 계산 적용)
+      // 월 상환액 = (대출원금 * 월이자율) / (1 - (1 + 월이자율)^(-상환개월수))
+      const monthlyPayment = 
+        (loanAmount * monthlyRate) / 
+        (1 - Math.pow((1 + monthlyRate), -totalMonths));
+
+      // 총 상환금액 = 월상환액 * 상환개월수
+      const totalPayment = monthlyPayment * totalMonths;
+      // 총 이자액 = 총상환금액 - 대출원금
+      const totalInterest = totalPayment - loanAmount;
+
+      // DSR (단순 가정: (연간 상환액 / 연소득)*100)
+      const annualPayment = monthlyPayment * 12;
+      const dsr = (annualPayment / annualIncome) * 100;
+
+      // 결과 표시
+      monthlyPayEl.textContent  = `월 상환액: ${formatMoney(monthlyPayment)} 만원`;
+      totalInterestEl.textContent = `총 이자액: ${formatMoney(totalInterest)} 만원`;
+      dsrCheckEl.textContent = `예상 DSR: ${dsr.toFixed(2)}% (가정치)`;
+
+      resultSection.style.display = 'block';
+    });
+
+    // 3자리 단위 콤마 (단순화, 소수점 제외)
+    function formatMoney(value) {
+      const intValue = Math.round(value); // 소수점 반올림
+      return intValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  </script>
+</body>
+</html>

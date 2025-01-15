@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>커뮤니티</title>
+  <style>
+    /* 전역 스타일 */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #f7f7f7;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav {
+      background: #e0e0e0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    /* 게시글 목록 스타일 */
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .board-header button {
+      background: #2196F3;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .board-header button:hover {
+      background: #1976d2;
+    }
+    table.board-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table.board-table th, table.board-table td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    table.board-table th {
+      background: #f2f2f2;
+    }
+    table.board-table tr:hover td {
+      background: #f9f9f9;
+      cursor: pointer;
+    }
+    /* 모달 공통 스타일 */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none; /* 기본으로 숨김 */
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      width: 500px;
+      max-width: 90%;
+      border-radius: 4px;
+      padding: 20px;
+      position: relative;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    .modal-content .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* 글 작성 폼 스타일 */
+    .write-form .form-group {
+      margin-bottom: 10px;
+    }
+    .write-form label {
+      display: block;
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+    .write-form input[type="text"],
+    .write-form textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+    .write-form textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .write-form button {
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .write-form button:hover {
+      background: #388e3c;
+    }
+    /* 글 상세보기 스타일 */
+    .detail-view {
+      margin-top: 10px;
+    }
+    .detail-view h4 {
+      margin: 0;
+    }
+    .detail-view p {
+      margin: 5px 0;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="container" style="border: none; background: none;">
+      <h1>커뮤니티</h1>
+    </div>
+  </header>
+
+  <!-- 상단 네비게이션 -->
+  <nav>
+    <a href="index.html">메인</a>
+    <a href="cheongyak-list.html">맞춤 청약</a>
+    <a href="finance-sim.html">금융 시뮬레이션</a>
+    <a href="logout.html">로그아웃</a>
+  </nav>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+    <h2>커뮤니티 게시판</h2>
+
+    <!-- 게시글 목록 영역 -->
+    <div class="board-header">
+      <span>총 <strong id="postCount">0</strong> 건</span>
+      <button id="btnNewPost">새 글 작성</button>
+    </div>
+
+    <table class="board-table">
+      <thead>
+        <tr>
+          <th style="width: 10%">번호</th>
+          <th style="width: 60%">제목</th>
+          <th style="width: 15%">작성자</th>
+          <th style="width: 15%">작성일</th>
+        </tr>
+      </thead>
+      <tbody id="boardBody">
+        <!-- JS로 게시글 목록 생성 -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 글 작성 모달 -->
+  <div class="modal-backdrop" id="writeModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeWriteModal()">×</button>
+      <h3>새 글 작성</h3>
+      <form class="write-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="writer">작성자</label>
+          <input type="text" id="writer" />
+        </div>
+        <div class="form-group">
+          <label for="title">제목</label>
+          <input type="text" id="title" />
+        </div>
+        <div class="form-group">
+          <label for="content">내용</label>
+          <textarea id="content"></textarea>
+        </div>
+        <button onclick="submitPost()">등록</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 글 상세 모달 -->
+  <div class="modal-backdrop" id="detailModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeDetailModal()">×</button>
+      <h3>글 상세보기</h3>
+      <div class="detail-view" id="detailView">
+        <!-- JS로 동적 생성 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 게시글 샘플 데이터
+    let posts = [
+      {
+        id: 1,
+        title: "청약 할 때 가점 계산 팁 공유합니다",
+        writer: "홍길동",
+        content: "청약 점수를 높이려면 부양가족 수가 중요합니다. 그리고 무주택 기간도 매우 중요해요...",
+        createdAt: "2025-01-01 12:34"
+      },
+      {
+        id: 2,
+        title: "부동산 세금 관련 질문 드려요",
+        writer: "김영희",
+        content: "1가구 2주택자가 되면 취득세가 어떻게 되는지 궁금합니다. 혹시 아시는 분 답변 부탁드립니다!",
+        createdAt: "2025-01-02 09:10"
+      }
+    ];
+    let currentId = 3; // 새 글 작성 시 ID 부여 용도
+
+    const boardBody = document.getElementById('boardBody');
+    const postCountEl = document.getElementById('postCount');
+
+    // 작성 모달
+    const writeModal = document.getElementById('writeModal');
+    // 상세보기 모달
+    const detailModal = document.getElementById('detailModal');
+    const detailView = document.getElementById('detailView');
+
+    // 초기 목록 렌더링
+    window.addEventListener('DOMContentLoaded', () => {
+      renderBoard();
+    });
+
+    // 게시글 목록 UI 생성
+    function renderBoard() {
+      boardBody.innerHTML = '';
+      posts.forEach((post, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${post.id}</td>
+          <td>${post.title}</td>
+          <td>${post.writer}</td>
+          <td>${post.createdAt}</td>
+        `;
+        // 글 클릭 시 상세 보기
+        tr.addEventListener('click', () => openDetailModal(post));
+        boardBody.appendChild(tr);
+      });
+      postCountEl.textContent = posts.length;
+    }
+
+    // 새 글 작성 모달 열기
+    const btnNewPost = document.getElementById('btnNewPost');
+    btnNewPost.addEventListener('click', () => {
+      writeModal.style.display = 'flex';
+    });
+
+    // 작성 모달 닫기
+    function closeWriteModal() {
+      writeModal.style.display = 'none';
+    }
+
+    // 상세 모달 열기
+    function openDetailModal(post) {
+      detailView.innerHTML = `
+        <h4>${post.title}</h4>
+        <p>작성자: ${post.writer}</p>
+        <p>작성일: ${post.createdAt}</p>
+        <hr />
+        <p>${post.content}</p>
+      `;
+      detailModal.style.display = 'flex';
+    }
+
+    // 상세 모달 닫기
+    function closeDetailModal() {
+      detailModal.style.display = 'none';
+    }
+
+    // 새 글 등록
+    function submitPost() {
+      const writerVal = document.getElementById('writer').value.trim();
+      const titleVal = document.getElementById('title').value.trim();
+      const contentVal = document.getElementById('content').value.trim();
+
+      if (!writerVal || !titleVal || !contentVal) {
+        alert("모든 필드를 입력해주세요.");
+        return;
+      }
+
+      const newPost = {
+        id: currentId++,
+        writer: writerVal,
+        title: titleVal,
+        content: contentVal,
+        createdAt: getCurrentTime()
+      };
+      posts.push(newPost);
+
+      // 목록 재렌더
+      renderBoard();
+
+      // 작성 모달 닫기 + 필드 초기화
+      document.getElementById('writer').value = '';
+      document.getElementById('title').value = '';
+      document.getElementById('content').value = '';
+      closeWriteModal();
+    }
+
+    // 현재 시각 문자열 생성 (예시)
+    function getCurrentTime() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd} ${hh}:${min}`;
+    }
+  </script>
+</body>
+</html>

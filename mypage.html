@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>관심정보 설정</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      background: #f5f5f5;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .container2 {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .search-section {
+      margin-bottom: 20px;
+    }
+    .search-section label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .search-input-wrapper {
+      position: relative;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    /* 임시 자동완성 목록 */
+    .autocomplete-list {
+      position: absolute;
+      top: 36px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none; /* JS로 제어 예정 */
+    }
+    .autocomplete-list li {
+      padding: 8px;
+      cursor: pointer;
+    }
+    .autocomplete-list li:hover {
+      background: #f0f0f0;
+    }
+
+    .interest-list {
+      margin-top: 20px;
+    }
+    .interest-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      margin-bottom: 5px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .interest-name {
+      font-weight: bold;
+      color: #333;
+    }
+    .btn-remove {
+      padding: 4px 8px;
+      background: #e53935;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    .btn-remove:hover {
+      background: #c62828;
+    }
+    .note {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #aaa;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .btn-back:hover {
+      background: #888;
+    }
+    .description {
+      background: #fafafa;
+      padding: 15px;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+    .data-source-list {
+      margin-bottom: 20px;
+    }
+    .data-source-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .data-source-item input[type="checkbox"] {
+      margin-right: 8px;
+      transform: scale(1.2);
+    }
+    .data-source-name {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .data-source-desc {
+      color: #555;
+      font-size: 0.9em;
+    }
+    .btn-sync {
+      display: inline-block;
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .btn-sync:hover {
+      background: #45a049;
+    }
+    .btn-back {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #aaa;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .btn-back:hover {
+      background: #888;
+    }
+    .result-message {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+      display: none; /* JS로 제어 */
+    }
+    .success {
+      background: #e6f4ea;
+      color: #2e7d32;
+    }
+    .fail {
+      background: #ffebee;
+      color: #c62828;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    
+  </style>
+</head>
+<body>
+  
+  <!-- 상단 헤더 -->
+  <header>
+    <div style="border:none;">
+      <h1>청약 인사이트</h1>
+    </div>
+  </header>
+  <div class="container">
+  <!-- 상단 네비게이션 (로그인) -->
+  <nav>
+    <a href="index.html">홈</a>
+    <a href="mypage.html">내정보</a>
+    <a href="signup.html">관심 지역</a>
+    <a href="login.html">로그아웃</a>
+    <a href="admin.html">[관리자페이지(admin)]</a>
+    <a> (로그인)</a>
+  </nav>
+</div>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container2">
+    <h2>정보 연동</h2>
+
+    <div class="description">
+      본 서비스는 아래의 공공데이터 및 금융 정보를 자동으로 불러와<br>
+      맞춤 청약·금융 시뮬레이션을 제공합니다.<br><br>
+      정보 연동을 위해 필요한 항목을 선택하고<br>
+      [정보 연동] 버튼을 눌러주세요.
+    </div>
+
+    <!-- 데이터 소스 리스트 -->
+    <div class="data-source-list">
+      <!-- 예시: 체크박스 형태로 동의 항목 선택 -->
+      
+      <div class="data-source-item">
+        <input type="checkbox" id="chkFinance" name="chkFinance" />
+        <label for="chkFinance">
+          <span class="data-source-name">금융정보 연동</span>
+          <span class="data-source-desc">(Codef API 통해 연소득/대출/신용점수 조회)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 정보 연동 버튼 -->
+    <button class="btn-sync" id="btnSync">정보 연동</button>
+
+    <!-- 연동 결과 메시지 -->
+    <div class="result-message success" id="msgSuccess">
+      정보 연동이 완료되었습니다!
+    </div>
+    <div class="result-message fail" id="msgFail">
+      정보 연동 중 오류가 발생했습니다.
+    </div>
+
+    <!-- 뒤로가기 버튼 -->
+    <a href="main.html" class="btn-back">메인으로</a>
+  </div>
+
+  <!-- 간단한 JS 예시 -->
+  <script>
+    const btnSync = document.getElementById('btnSync');
+    const msgSuccess = document.getElementById('msgSuccess');
+    const msgFail = document.getElementById('msgFail');
+
+    // 실제로는 서버와 통신 후 성공/실패 결과를 받음
+    btnSync.addEventListener('click', function() {
+      // 체크박스 상태 확인
+      const chkCheongyak = document.getElementById('chkCheongyak').checked;
+      const chkFinance = document.getElementById('chkFinance').checked;
+
+      if (!chkCheongyak && !chkFinance) {
+        alert('최소 하나 이상의 항목을 선택해야 합니다.');
+        return;
+      }
+
+      // UI 초기화
+      msgSuccess.style.display = 'none';
+      msgFail.style.display = 'none';
+
+      // 예시로 2초 후 성공 메시지 표시
+      setTimeout(() => {
+        // 무작위로 성공/실패 시뮬레이션
+        const isSuccess = Math.random() > 0.3; 
+        if (isSuccess) {
+          msgSuccess.style.display = 'block';
+        } else {
+          msgFail.style.display = 'block';
+        }
+      }, 2000);
+    });
+  </script>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container2">
+    <h2>관심정보 설정</h2>
+
+    <!-- 지역 검색/등록 섹션 -->
+    <div class="search-section">
+      <label for="regionSearch">관심지역 검색 (시/구/동)</label>
+      <div class="search-input-wrapper">
+        <input 
+          type="text" 
+          id="regionSearch" 
+          name="regionSearch" 
+          placeholder="예) 서울시 강남구 역삼동" />
+        
+        <!-- 임시 자동완성 목록 (JS에서 동적 제어) -->
+        <ul class="autocomplete-list" id="autocompleteList">
+          <!-- 예시로 몇 개만 하드코딩 -->
+          <!-- <li>서울특별시 강남구 역삼동</li>
+          <li>서울특별시 강남구 삼성동</li>
+          <li>부산광역시 해운대구 우동</li> -->
+        </ul>
+      </div>
+      <p class="note">※ 최대 5개까지 등록 가능합니다.</p>
+    </div>
+
+    <!-- 관심지역 목록 (등록된 지역 표시) -->
+    <div class="interest-list" id="interestList">
+      <!-- 예시 (JS로 동적 생성) 
+      <div class="interest-item">
+        <span class="interest-name">서울특별시 강남구 역삼동</span>
+        <button class="btn-remove">삭제</button>
+      </div>
+      -->
+    </div>
+
+    <!-- 뒤로가기 버튼 -->
+    <a href="main.html" class="btn-back">메인으로</a>
+  </div>
+
+  <!-- JS (간단한 예시) -->
+  <script>
+    // 간단한 예시 배열
+    const sampleRegions = [
+      "서울특별시 강남구 역삼동",
+      "서울특별시 강남구 삼성동",
+      "서울특별시 강남구 청담동",
+      "서울특별시 서초구 서초동",
+      "부산광역시 해운대구 우동",
+      "부산광역시 해운대구 좌동"
+    ];
+
+    const MAX_INTEREST = 5;
+
+    const regionSearchInput = document.getElementById('regionSearch');
+    const autocompleteList = document.getElementById('autocompleteList');
+    const interestList = document.getElementById('interestList');
+
+    let registeredRegions = [];
+
+    // 검색어 입력 이벤트
+    regionSearchInput.addEventListener('input', function() {
+      const query = regionSearchInput.value.trim();
+      if (query.length === 0) {
+        autocompleteList.style.display = 'none';
+        return;
+      }
+      
+      // 간단한 필터 예시
+      const filtered = sampleRegions.filter(r => r.includes(query));
+      
+      if (filtered.length > 0) {
+        autocompleteList.innerHTML = '';
+        filtered.forEach(region => {
+          const li = document.createElement('li');
+          li.textContent = region;
+          li.addEventListener('click', () => selectRegion(region));
+          autocompleteList.appendChild(li);
+        });
+        autocompleteList.style.display = 'block';
+      } else {
+        autocompleteList.style.display = 'none';
+      }
+    });
+
+    // 지역 선택 함수
+    function selectRegion(region) {
+      // 최대 5개 체크
+      if (registeredRegions.length >= MAX_INTEREST) {
+        alert('관심지역은 최대 5개까지 등록할 수 있습니다.');
+        return;
+      }
+      // 중복 체크
+      if (registeredRegions.includes(region)) {
+        alert('이미 등록된 지역입니다.');
+        return;
+      }
+      registeredRegions.push(region);
+      renderInterestList();
+      
+      // 검색어, 목록 초기화
+      regionSearchInput.value = '';
+      autocompleteList.style.display = 'none';
+    }
+
+    // 등록된 지역 표시
+    function renderInterestList() {
+      interestList.innerHTML = '';
+      registeredRegions.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'interest-item';
+
+        const span = document.createElement('span');
+        span.className = 'interest-name';
+        span.textContent = r;
+
+        const btn = document.createElement('button');
+        btn.className = 'btn-remove';
+        btn.textContent = '삭제';
+        btn.addEventListener('click', () => removeRegion(r));
+
+        div.appendChild(span);
+        div.appendChild(btn);
+
+        interestList.appendChild(div);
+      });
+    }
+
+    // 지역 삭제
+    function removeRegion(region) {
+      registeredRegions = registeredRegions.filter(r => r !== region);
+      renderInterestList();
+    }
+  </script>
+</body>
+</html>

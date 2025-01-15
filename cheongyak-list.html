@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>맞춤 청약 확인</title>
+  <style>
+    body {
+      margin: 0; 
+      padding: 0; 
+      font-family: sans-serif; 
+      background: #f7f7f7;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav {
+      background: #e0e0e0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .filter-section {
+      margin-bottom: 20px;
+    }
+    .filter-section label {
+      margin-right: 10px;
+    }
+    .filter-section select {
+      padding: 6px;
+    }
+    .cheongyak-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .cheongyak-item {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+      background: #fafafa;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .cheongyak-item:hover {
+      background: #f1f1f1;
+    }
+    .item-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .item-info {
+      font-size: 14px;
+      color: #555;
+    }
+    .item-more {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #0080ff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .note {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #666;
+      text-align: center;
+    }
+    
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="container" style="border: none; background: none;">
+      <h1>청약 인사이트</h1>
+    </div>
+  </header>
+
+  <!-- 상단 네비게이션 -->
+  <nav>
+    <a href="index.html">메인</a>
+    <a href="interest.html">관심정보 설정</a>
+    <a href="logout.html">로그아웃</a>
+  </nav>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+    <h2>맞춤 청약 확인</h2>
+
+    <!-- 필터 섹션 (분양유형, 입주예정일 등) -->
+    <div class="filter-section">
+      <label for="typeFilter">분양유형:</label>
+      <select id="typeFilter">
+        <option value="">전체</option>
+        <option value="APT">APT</option>
+        <option value="오피스텔">오피스텔</option>
+      </select>
+
+      <label for="priceFilter" style="margin-left: 20px;">가격대:</label>
+      <select id="priceFilter">
+        <option value="">전체</option>
+        <option value="low">3억 이하</option>
+        <option value="mid">3억 ~ 6억</option>
+        <option value="high">6억 이상</option>
+      </select>
+    </div>
+
+    <!-- 청약 목록 -->
+    <div class="cheongyak-list" id="cheongyakList">
+      <!-- JS로 동적 생성할 예정 -->
+    </div>
+
+    <p class="note">관심지역 및 조건에 맞는 청약 목록입니다. 상세 항목을 클릭하세요.</p>
+  </div>
+
+  <script>
+    // 임의의 샘플 데이터 (실제론 API 연동 필요)
+    const sampleCheongyak = [
+      {
+        id: 1,
+        title: "서울 강남구 역삼동 APT",
+        type: "APT",
+        price: 800000000,   // 8억
+        moveInDate: "2025-01-01",
+        area: "84m²",
+        region: "서울특별시 강남구 역삼동"
+      },
+      {
+        id: 2,
+        title: "부산 해운대구 좌동 오피스텔",
+        type: "오피스텔",
+        price: 300000000,   // 3억
+        moveInDate: "2024-10-15",
+        area: "59m²",
+        region: "부산광역시 해운대구 좌동"
+      },
+      {
+        id: 3,
+        title: "서울 서초구 서초동 APT",
+        type: "APT",
+        price: 500000000,   // 5억
+        moveInDate: "2025-06-01",
+        area: "75m²",
+        region: "서울특별시 서초구 서초동"
+      },
+      {
+        id: 4,
+        title: "서울 강남구 청담동 오피스텔",
+        type: "오피스텔",
+        price: 1200000000,  // 12억
+        moveInDate: "2026-03-10",
+        area: "90m²",
+        region: "서울특별시 강남구 청담동"
+      }
+    ];
+
+    const cheongyakListEl = document.getElementById('cheongyakList');
+    const typeFilterEl = document.getElementById('typeFilter');
+    const priceFilterEl = document.getElementById('priceFilter');
+
+    function renderList() {
+      cheongyakListEl.innerHTML = '';
+      // 필터 값 가져오기
+      const selType = typeFilterEl.value;
+      const selPrice = priceFilterEl.value;
+
+      // 필터 적용
+      let filteredList = sampleCheongyak;
+
+      if (selType) {
+        filteredList = filteredList.filter(item => item.type === selType);
+      }
+
+      if (selPrice) {
+        filteredList = filteredList.filter(item => {
+          if (selPrice === 'low') return item.price <= 300000000;      // 3억 이하
+          if (selPrice === 'mid') return item.price > 300000000 && item.price <= 600000000; // 3억~6억
+          if (selPrice === 'high') return item.price > 600000000;     // 6억 이상
+        });
+      }
+
+      // DOM 그리기
+      filteredList.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'cheongyak-item';
+        
+        div.innerHTML = `
+          <div class="item-title">${item.title}</div>
+          <div class="item-info">가격: ${formatPrice(item.price)} | 면적: ${item.area} | 입주예정: ${item.moveInDate}</div>
+          <div class="item-info">위치: ${item.region}</div>
+          <div class="item-more">상세보기 &raquo;</div>
+        `;
+
+        // 상세보기 클릭 이벤트
+        div.addEventListener('click', () => goToDetail(item.id));
+
+        cheongyakListEl.appendChild(div);
+      });
+    }
+
+    // 상세보기 페이지로 이동
+    function goToDetail(id) {
+      // 예: cheongyak-detail.html?id=1 형태로 이동
+      window.location.href = `cheongyak-detail.html?id=${id}`;
+    }
+
+    function formatPrice(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "원";
+    }
+
+    // 필터 이벤트
+    typeFilterEl.addEventListener('change', renderList);
+    priceFilterEl.addEventListener('change', renderList);
+
+    // 초기 렌더링
+    renderList();
+  </script>
+</body>
+</html>

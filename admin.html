@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>관리자 모니터링</title>
+  <style>
+    body {
+      margin: 0; 
+      padding: 0; 
+      font-family: sans-serif; 
+      background: #f7f7f7;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav {
+      background: #e0e0e0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    .monitor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .monitor-block {
+      background: #fafafa;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+    }
+    .monitor-block h3 {
+      margin-top: 0;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+    .block-content {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .log-item {
+      margin-bottom: 8px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .log-item .timestamp {
+      font-weight: bold;
+      display: block;
+    }
+    .refresh-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: #2196F3;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    .refresh-btn:hover {
+      background: #1976d2;
+    }
+    .note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="container" style="border: none; background: none;">
+      <h1>관리자 페이지</h1>
+    </div>
+  </header>
+
+  <!-- 상단 네비게이션 (관리자 전용 메뉴) -->
+  <nav>
+    <a href="index.html">메인</a>
+    <a href="cheongyak-list.html">맞춤 청약 확인</a>
+    <a href="finance-sim.html">금융 시뮬레이션</a>
+    <a href="logout.html">로그아웃</a>
+  </nav>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+    <h2>모니터링 대시보드</h2>
+    
+    <!-- 대시보드 그리드 -->
+    <div class="monitor-grid">
+      <!-- 스케줄러 상태 블록 -->
+      <div class="monitor-block">
+        <h3>스케줄러 상태</h3>
+        <div class="block-content" id="schedulerStatus">
+          <!-- 예) 가장 최근 자동 수집 시각, 성공/실패 여부 표시 -->
+          <p>최근 실행 시간: <span id="lastRunTime">-</span></p>
+          <p>상태: <span id="lastRunStatus">-</span></p>
+          <button class="refresh-btn" onclick="refreshScheduler()">새로고침</button>
+        </div>
+      </div>
+
+      <!-- 로그/오류 현황 블록 -->
+      <div class="monitor-block">
+        <h3>로그 / 오류 현황</h3>
+        <div class="block-content" id="errorLogs">
+          <!-- JS로 동적 표시 -->
+        </div>
+      </div>
+
+      <!-- 사용자 통계 블록 -->
+      <div class="monitor-block">
+        <h3>사용자 통계</h3>
+        <div class="block-content" id="userStats">
+          <!-- 예) 가입자 수, 소셜 로그인 비중 등 -->
+          <p>총 가입자 수: <span id="totalUsers">0</span> 명</p>
+          <p>소셜 로그인 비중: <span id="socialRate">-</span></p>
+          <button class="refresh-btn" onclick="refreshUserStats()">새로고침</button>
+        </div>
+      </div>
+
+      <!-- 청약 데이터 통계 블록 -->
+      <div class="monitor-block">
+        <h3>청약 데이터 통계</h3>
+        <div class="block-content" id="cheongyakStats">
+          <!-- 예) 데이터 테이블 레코드 수, 지역별 청약 분포 등 -->
+          <p>청약 정보 레코드: <span id="recordCount">0</span> 건</p>
+          <p>최근 업데이트: <span id="lastUpdate">-</span></p>
+          <button class="refresh-btn" onclick="refreshCheongyakStats()">새로고침</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">※ 실제 데이터는 서버 연동을 통해 최신 정보를 불러옵니다.</p>
+  </div>
+
+  <script>
+    // 임시 데이터 예시
+    let sampleLogs = [
+      { time: "2025-01-01 09:00", message: "[INFO] 스케줄러 시작", type: "info" },
+      { time: "2025-01-01 09:01", message: "[ERROR] 청약정보 API 호출 실패", type: "error" },
+      { time: "2025-01-01 09:02", message: "[INFO] 금융상품 데이터 수집 완료", type: "info" },
+    ];
+
+    function refreshScheduler() {
+      // 실제론 서버에서 API 호출로 확인
+      document.getElementById('lastRunTime').textContent = "2025-01-01 09:02";
+      document.getElementById('lastRunStatus').textContent = "성공(일부 오류)";
+    }
+
+    function refreshUserStats() {
+      // 실제론 서버에서 API 호출
+      document.getElementById('totalUsers').textContent = "1234";
+      document.getElementById('socialRate').textContent = "45%";
+    }
+
+    function refreshCheongyakStats() {
+      // 실제론 서버에서 API 호출
+      document.getElementById('recordCount').textContent = "560";
+      document.getElementById('lastUpdate').textContent = "2025-01-01 09:02";
+    }
+
+    // 로그 표시 예시
+    function renderLogs() {
+      const errorLogsEl = document.getElementById('errorLogs');
+      errorLogsEl.innerHTML = '';
+      sampleLogs.forEach(log => {
+        const div = document.createElement('div');
+        div.className = 'log-item';
+        div.innerHTML = `
+          <span class="timestamp">${log.time}</span>
+          <span class="message">${log.message}</span>
+        `;
+        // 에러 로그인 경우 색 강조
+        if (log.type === 'error') {
+          div.style.color = 'red';
+        }
+        errorLogsEl.appendChild(div);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderLogs();
+      refreshScheduler();
+      refreshUserStats();
+      refreshCheongyakStats();
+    });
+  </script>
+</body>
+</html>

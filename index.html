@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>메인화면</title>
+  <style>
+    /* 간단한 스타일 (필요에 맞게 수정 가능) */
+    body {
+      margin: 0; 
+      padding: 0; 
+      font-family: sans-serif; 
+      background: #f7f7f7;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    nav {
+      background: #e0e0e0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    .welcome {
+      background: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .menu-item {
+      background: #fff;
+      padding: 20px;
+      text-align: center;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .menu-item:hover {
+      transform: translateY(-3px);
+    }
+    .menu-item a {
+      display: block;
+      text-decoration: none;
+      color: #333;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 상단 헤더 -->
+  <header>
+    <div class="container">
+      <h1>청약 인사이트</h1>
+    </div>
+  </header>
+
+  <!-- 상단 네비게이션 (비로그인) -->
+  <nav>
+    <a href="#">홈</a>
+    <a href="login.html">로그인</a>
+    <a href="signup.html">회원가입</a>
+    <a href="community.html"> 게시판</a>
+    <a> (비로그인)</a>
+  </nav>
+
+  <!-- 상단 네비게이션 (로그인) -->
+  <nav>
+    <a href="#">홈</a>
+    <a href="mypage.html">내정보</a>
+    <a href="cheongyak-list.html">관심 지역</a>
+    <a href="community.html"> 게시판</a>
+    <a href="login.html">로그아웃</a>
+    <a href="admin.html">[관리자페이지(admin)]</a>
+    <a> (로그인)</a>
+  </nav>
+
+  <!-- 메인 컨테이너 -->
+  <div class="container">
+    <!-- 환영 메시지 -->
+    <div class="welcome">
+      <h2>가장 인기 있는 지역</h2>
+      <p>시, 구, 동 & 그래프</p>
+    </div>
+
+    <!-- 주요 기능 메뉴 (그리드 배치) -->
+    <div class="menu-grid">
+      <!-- 청약 정보 조회 -->
+      <div class="menu-item">
+        <img src="https://via.placeholder.com/200x120?text=관심지역" alt="관심 지역" />
+        <a href="cheongyak-list.html">나의 관심지역 리스트</a>
+      </div>
+      
+      <!-- 금융 시뮬레이션 -->
+      <div class="menu-item">
+        <img src="https://via.placeholder.com/200x120?text=게시판" alt="게시판" />
+        <a href="community.html">게시판</a>
+      </div>
+
+      <!-- 관리자/모니터링 페이지 (관리자용) -->
+      <!-- <div class="menu-item">
+        <img src="https://via.placeholder.com/200x120?text=관리자페이지" alt="관리자 페이지" />
+        <a href="admin.html">관리자 모니터링</a>
+      </div> -->
+    </div>
+  </div>
+</body>
+</html>
